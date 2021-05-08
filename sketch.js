@@ -12,13 +12,13 @@ happyDog=loadImage("happy dog.png");
 }
 
 function setup() {
-  //database=firebase.database();
+  database=firebase.database();
   createCanvas(1000,400);
 
   foodObj = new Food();
 
-  //foodStock=database.ref('Food');
-  //foodStock.on("value",readStock);
+  foodStock=database.ref('Food');
+  foodStock.on("value",readStock);
   
   dog=createSprite(800,200,150,150);
   dog.addImage(sadDog);
@@ -40,10 +40,10 @@ function draw() {
   foodObj.display();
 
  // to read fedtime value from the database 
-  //feedTime = database.ref('FeedTime');
-  //feedTime.on("value",function(data){
-  //lastFed = data.val();
-  
+  feedTime = database.ref('FeedTime');
+  feedTime.on("value",function(data){
+  lastFed = data.val();
+  });
   fill("red");
   textSize(25);
   
@@ -84,7 +84,13 @@ else{
   foodObj.updateFoodStock(food_stock_val -1);
 
 }
+database.ref('/').update({
+Food:foodObj.getFoodStock(),
+FeedTime:hour()
+})
+
 }
+
 
 
 
@@ -92,6 +98,8 @@ else{
 //function to add food in stock
 function addFoods(){
   foodS++;
-  //database.ref('/').update({
+
+  database.ref('/').update({
     Food:foodS
+  })
  }
